@@ -1,0 +1,22 @@
+{
+  "name": "chatgate-backend-v1",
+  "version": "1.0.0",
+  "description": "Chatgate is a CRM backend built on Node.js and Express.js, designed to connect human agents to a Botpress Server V12 chatbot, Botpress Cloud, Facebook Pages API and other additional channels as microservices.",
+  "main": "server.js",
+  "scripts": {
+     "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "knex": "^3.1.0",
+    "morgan": "^1.10.0",
+    "objection": "^3.1.5",
+    "pg": "^8.13.1"
+  }
+}
