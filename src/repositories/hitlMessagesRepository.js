@@ -14,13 +14,13 @@ class HitlMessageRepository {
         return hitlMessage.query().insert(MsgConversationData);
     }
 
-    async updateHitlMessage(id, MsgConversationData) {
-        return hitlMessage.query().findById(id).patch(MsgConversationData);
-    }
-
-    async deleteHitlMessage(id) {
-        return hitlMessage.query().deleteById(id);
-    }
+    // async updateHitlMessage(id, MsgConversationData) {
+    //     return hitlMessage.query().findById(id).patch(MsgConversationData);
+    // }
+    //
+    // async deleteHitlMessage(id) {
+    //     return hitlMessage.query().deleteById(id);
+    // }
 }
 
 module.exports = new HitlMessageRepository();

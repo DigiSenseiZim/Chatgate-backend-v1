@@ -15,13 +15,13 @@ class HitlMessageService {
     }
 
 
-    async updateHitlMessage(id, MsgUserData) {
-        return hitlMessageRepository.updateHitlMessage(id, MsgUserData);
-    }
-
-    async deleteHitlMessage(id) {
-        return hitlMessageRepository.deleteHitlMessage(id);
-    }
+    // async updateHitlMessage(id, MsgUserData) {
+    //     return hitlMessageRepository.updateHitlMessage(id, MsgUserData);
+    // }
+    //
+    // async deleteHitlMessage(id) {
+    //     return hitlMessageRepository.deleteHitlMessage(id);
+    // }
 }
 
 module.exports = new HitlMessageService();
