@@ -12,6 +12,7 @@ const app = express();
 
 //database endpoints
 const hitlSessionRoutes = require('./src/routes/hitlRoutes');
+const hitlMessageRoutes = require('./src/routes/hitlMessageRoutes');
 
 // Initialize knex and bind it to objection's Model
 const knex = Knex(knexConfig.development);
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/hitl-sessions', hitlSessionRoutes);
+app.use('/hitl-messages', hitlMessageRoutes)
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
