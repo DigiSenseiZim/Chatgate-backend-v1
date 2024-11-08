@@ -2,12 +2,12 @@
 const hitlMessageRepository = require('../repositories/hitlMessagesRepository');
 
 class HitlMessageService {
-    async listhitlMessages() {
+    async listHitlMessages() {
         return hitlMessageRepository.getAllHitlMessages();
     }
 
-    async gethitlMessage(session_id) {
-        return hitlMessageRepository.getHitlMessagesById(session_id);
+    async getHitlMessage(session_id, type) {
+        return hitlMessageRepository.getHitlMessagesById(session_id, type);
     }
 
     async addHitlMessage(MsgUserData) {

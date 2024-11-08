@@ -6,8 +6,11 @@ class HitlMessageRepository {
         return hitlMessage.query();
     }
 
-    async getHitlMessagesById(session_id) {
-        return hitlMessage.query().where('session_id', '=', session_id);
+    async getHitlMessagesById(session_id, type) {
+        return hitlMessage
+        .query()
+        .where('session_id', '=', session_id)
+        .andWhere('type', '!=', type);
     }
 
     async createHitlMessage(MsgConversationData) {

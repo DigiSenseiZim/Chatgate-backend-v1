@@ -19,17 +19,17 @@ const knex = Knex(knexConfig.development);
 Model.knex(knex);
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173',  // Allow only this origin
+  optionsSuccessStatus: 200         // Some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 const PORT = process.env.PORT || 5000;
-
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
 
 app.use('/hitl-sessions', hitlSessionRoutes);
 app.use('/hitl-messages', hitlMessageRoutes)

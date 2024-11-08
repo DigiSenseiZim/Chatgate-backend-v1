@@ -1,39 +1,73 @@
 // controllers/hitlSessionController.js
 const hitlSessionService = require('../services/hitlSessionService');
+const Joi = require('joi');
 
 class HitlSessionController {
+
+    // GET: List all HITL sessions
     async getHitlSessions(req, res) {
-        const hitlSessions = await hitlSessionService.listHitlSessions();
-        res.json(hitlSessions);
+        try {
+            const hitlSessions = await hitlSessionService.listHitlSessions();
+            res.status(200).json(hitlSessions);
+        } catch (error) {
+            console.error('Error fetching HITL sessions:', error.message);
+            res.status(500).json({ error: 'Failed to fetch HITL sessions' });
+        }
     }
-    
+
+    // GET: Fetch HITL sessions by status
     async getHitlSessionsByStatus(req, res) {
-        const hitl_sessions = await hitlSessionService.listHitlSessionsByStatus(req.query.status);
-        res.json(hitl_sessions);
+        
+        // Schema for validating the query parameters of getHitlSessionsByStatus
+        const validateGetHitlSessionsByStatusQuery = (query) => {
+            const schema = Joi.object({
+                status: Joi.boolean().required(),
+            });
+            return schema.validate(query);
+        }
+        try {
+            const { error } = validateGetHitlSessionsByStatusQuery(req.query);
+            if (error) return res.status(400).json({ error: error.details[0].message });
+
+            const { status } = req.query;
+            const hitlSessions = await hitlSessionService.listHitlSessionsByStatus(status);
+
+            if (!hitlSessions || hitlSessions.length === 0) {
+                return res.status(404).json({ message: 'No HITL sessions found for the given status' });
+            }
+
+            res.status(200).json(hitlSessions);
+        } catch (error) {
+            console.error('Error fetching HITL sessions by status:', error.message);
+            res.status(500).json({ error: 'Failed to fetch HITL sessions' });
+        }
     }
- 
+
+    // GET: Fetch a single HITL session by session_id
     async getHitlSession(req, res) {
-        const hitlSession = await hitlSessionService.getHitlSession(req.params.session_id);
-        if (!hitlSession) return res.status(404).send('HitlSession not found');
-        res.json(hitlSession);
+        try {
+            const schema = Joi.object({
+                session_id: Joi.number().required(),
+            });
+
+            const { error } = schema.validate(req.params);
+            if (error) return res.status(400).json({ error: error.details[0].message });
+
+            const { session_id } = req.params;
+            const hitlSession = await hitlSessionService.getHitlSession(session_id);
+
+            if (!hitlSession) {
+                return res.status(404).json({ message: 'HitlSession not found' });
+            }
+
+            res.status(200).json(hitlSession);
+        } catch (error) {
+            console.error('Error fetching HITL session:', error.message);
+            res.status(500).json({ error: 'Failed to fetch HITL session' });
+        }
     }
 
-    // async createHitlSession(req, res) {
-    //     const newHitlSession = await hitlSessionService.addHitlSession(req.body);
-    //     res.status(201).json(newHitlSession);
-    // }
-
-    // async updateHitlSession(req, res) {
-    //     const updatedHitlSession = await hitlSessionService.updateHitlSession(req.params.id, req.body);
-    //     if (!updatedHitlSession) return res.status(404).send('HitlSession not found');
-    //     res.json(updatedHitlSession);
-    // }
-
-    // async deleteHitlSession(req, res) {
-    //     const result = await hitlSessionService.deleteHitlSession(req.params.id);
-    //     if (result === 0) return res.status(404).send('HitlSession not found');
-    //     res.status(204).send();
-    // }
+    
 }
 
 module.exports = new HitlSessionController();
