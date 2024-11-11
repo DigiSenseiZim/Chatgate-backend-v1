@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const helmet = require('helmet');
 
 dotenv.config();
 const app = express();
@@ -20,14 +21,15 @@ Model.knex(knex);
 
 // Middleware
 const corsOptions = {
-  origin: 'http://localhost:5173',  // Allow only this origin
-  optionsSuccessStatus: 200         // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: 'http://localhost:3000', 
+  optionsSuccessStatus: 200         
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use(helmet());
 
 const PORT = process.env.PORT || 5000;
 

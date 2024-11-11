@@ -14,17 +14,7 @@ class HitlSessionService {
         return hitlSessionRepository.getHitlSessionById(session_id);
     }
 
-    // async addHitlSession(hitlSessionData) {
-    //     return hitlSessionRepository.createHitlSession(hitlSessionData);
-    // }
-
-    // async updateHitlSession(id, hitlSessionData) {
-    //     return hitlSessionRepository.updateHitlSession(id, hitlSessionData);
-    // }
-
-    // async deleteHitlSession(id) {
-    //     return hitlSessionRepository.deleteHitlSession(id);
-    // }
+   
 }
 
 module.exports = new HitlSessionService();
