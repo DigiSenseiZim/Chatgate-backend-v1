@@ -1,30 +1,40 @@
-// repositories/hitl_sessionRepository.js
-const hitl_session = require('../models/HitlSession');
+// repositories/hitlSessionRepository.js
+const HitlSession = require('../models/HitlSession');
 
 class HitlSessionRepository {
+  
     async getAllHitlSessions() {
-        return hitl_session.query();
+        try {
+            const sessions = await HitlSession.query();
+            return sessions;
+        } catch (error) {
+            console.error('Error fetching all HITL sessions:', error.message);
+            throw new Error('Failed to retrieve HITL sessions.');
+        }
     }
-    
+
     async getAllHitlSessionsByStatus(status) {
-        return hitl_session.query().where('paused', '=', status);
+
+        try {
+            const sessions = await HitlSession.query().where('paused', status);
+            return sessions;
+        } catch (error) {
+            console.error(`Error fetching HITL sessions with status: ${status}`, error.message);
+            throw new Error('Failed to retrieve HITL sessions by status.');
+        }
     }
 
-    async getHitlSessionById(session_id) {
-        return hitl_session.query().findById(session_id);
+    async getHitlSessionById(sessionId) {
+
+
+        try {
+            const session = await HitlSession.query().findById(sessionId);
+            return session;
+        } catch (error) {
+            console.error(`Error fetching HITL session with ID: ${sessionId}`, error.message);
+            throw new Error('Failed to retrieve HITL session by ID.');
+        }
     }
-
-    // async createHitlSession(hitl_sessionData) {
-    //     return hitl_session.query().insert(hitl_sessionData);
-    // }
-
-    // async updateHitlSession(id, hitl_sessionData) {
-    //     return hitl_session.query().findById(id).patch(hitl_sessionData);
-    // }
-
-    // async deleteHitlSession(id) {
-    //     return hitl_session.query().deleteById(id);
-    // }
 }
 
 module.exports = new HitlSessionRepository();

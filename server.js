@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const helmet = require('helmet');
 
 dotenv.config();
 const app = express();
@@ -19,17 +20,18 @@ const knex = Knex(knexConfig.development);
 Model.knex(knex);
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  optionsSuccessStatus: 200         
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use(helmet());
 
-const PORT = process.env.PORT || 5000;
-
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+const PORT = process.env.PORT || 8000;
 
 app.use('/hitl-sessions', hitlSessionRoutes);
 app.use('/hitl-messages', hitlMessageRoutes)
