@@ -6,9 +6,6 @@ class HitlSession extends Model {
         return 'hitl_sessions';
     }
 
-    static get relationMappings() {
-
-    }
 }
 
 module.exports = HitlSession;
