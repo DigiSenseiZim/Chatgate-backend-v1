@@ -23,6 +23,7 @@ const roleRoutes = require('./src/routes/roleRoutes');
 const botpressMessageRoutes = require("./src/routes/botpressMessagesRoutes");
 const errorHandler = require("./src/middleware/errorHandler");
 
+
 // Initialize knex and bind it to objection's Model
 const knex = Knex(knexConfig.development);
 Model.knex(knex);
@@ -39,6 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(errorHandler);
+
 app.use(
   session({
     secret: 'YOUR_SESSION_SECRET',
