@@ -4,7 +4,7 @@ const router = express.Router();
 const hitlMessageController = require('../controllers/hitlMessagesController');
 
 router.get('/all', hitlMessageController.getHitlMessages);
-router.get('/session_id', hitlMessageController.getHitlMessageBySessionId);
+router.get('/messages/session_id', hitlMessageController.getHitlMessageBySessionId);
 router.post('/create', hitlMessageController.createHitlMessage);
 
 

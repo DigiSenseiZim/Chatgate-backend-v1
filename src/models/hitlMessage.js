@@ -6,9 +6,6 @@ class HitlMessage extends Model {
         return 'hitl_messages';
     }
 
-    static get relationMappings() {
-
-    }
 }
 
 module.exports = HitlMessage;

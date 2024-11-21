@@ -24,7 +24,7 @@ const axios = require('axios')
         const result = await knex('hitl_sessions')
           .select('id')
           .where({ thread_id: threadId })
-          .first() // Use .first() to get a single result
+          .first() 
 
         return result ? result.id : null // Returns the id if found, otherwise null
       } catch (error) {
