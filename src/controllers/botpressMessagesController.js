@@ -1,65 +1,61 @@
-// controllers/Au.js
-const { default: axios } = require("axios");
+// controllers/botpressMessagesController.js
+const axios = require("axios");
 const hitlSessionService = require("../services/hitlSessionService");
-const Joi = require("joi");
+const { validateSessionIdQuery, validateMessageBody } = require("../validators/botpressValidators");
 const { botpressBaseUrl } = require("../botpressApi/http-common");
 
-class botpressMessagesController {
-  // GET: List all HITL sessions
-  async sendMessage(req, res) {
-    // Schema for validating session_id
-    const validateSessionIdQuery = (query) => {
-      const schema = Joi.object({
-        session_id: Joi.number().required(),
-      });
-      return schema.validate(query);
-    };
-    // Schema for validating session_id
-    const validateMessageQuery = (query) => {
-      const schema = Joi.object({
-        message: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
-      });
-      return schema.validate(query);
-    };
+class BotpressMessagesController {
+  // GET: Send a message to a HITL session
+  async sendMessage(req, res, next) {
     try {
+      // Validate the request query
       const { error: sessionIdError } = validateSessionIdQuery(req.query);
       if (sessionIdError) {
-        return res
-          .status(400)
-          .json({ error: sessionIdError.details[0].message });
+        return res.status(400).json({ error: sessionIdError.details[0].message });
       }
 
-      const { error: messageError } = validateMessageQuery(req.body);
+      // Validate the request body
+      const { error: messageError } = validateMessageBody(req.body);
       if (messageError) {
         return res.status(400).json({ error: messageError.details[0].message });
       }
-      // Retrieve the bearer token from the incoming request's headers
-      const authHeader = req.headers.authorization;
-      const accessToken = authHeader && authHeader.split(" ")[1]; // Extract the token part
 
-      // Make a request to the external API
+      // Extract the Bearer token
+      const authHeader = req.headers.authorization;
+      const accessToken = authHeader && authHeader.split(" ")[1];
+      if (!accessToken) {
+        return res.status(401).send("Authorization token is missing");
+      }
+
+      // Send the request to Botpress API
+      const { session_id } = req.query;
       const response = await axios.post(
-        `${botpressBaseUrl}/v1/bots/test/mod/hitl/sessions/${req.query.session_id}/message`,
+        `${botpressBaseUrl}/v1/bots/${process.env.BOTNAME}/mod/hitl/sessions/${session_id}/message`,
         req.body,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      // Send the data received from the external API back to the client
+      // Respond with the data received from Botpress API
       res.json(response.data);
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        res.status(400).send(error.response.data.message);
-      } else if (error.response && error.response.status === 401) {
-        res.status(401).send("Forbidden");
-      } else {
-        res.status(500).send("Unexpected error occurred");
+      // Pass error to the error-handling middleware
+      next(this.mapError(error));
+    }
+  }
+
+  // Map external errors to appropriate HTTP status codes
+  mapError(error) {
+    if (error.response) {
+      console.log(error);
+      const { status, data } = error.response;
+      if (status === 400) {
+        return { status: 400, message: data.message || "Bad Request" };
+      } else if (status === 401) {
+        return { status: 401, message: "Unauthorized" };
       }
     }
+    return { status: 500, message: "Unexpected error occurred" };
   }
 }
 
-module.exports = new botpressMessagesController();
+module.exports = new BotpressMessagesController();
