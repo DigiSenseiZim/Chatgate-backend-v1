@@ -30,7 +30,7 @@ class BotpressMessagesController {
       // Send the request to Botpress API
       const { session_id } = req.query;
       const response = await axios.post(
-        `${botpressBaseUrl}/v1/bots/test/mod/hitl/sessions/${session_id}/message`,
+        `${botpressBaseUrl}/v1/bots/${process.env.BOTNAME}/mod/hitl/sessions/${session_id}/message`,
         req.body,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -46,6 +46,7 @@ class BotpressMessagesController {
   // Map external errors to appropriate HTTP status codes
   mapError(error) {
     if (error.response) {
+      console.log(error);
       const { status, data } = error.response;
       if (status === 400) {
         return { status: 400, message: data.message || "Bad Request" };
