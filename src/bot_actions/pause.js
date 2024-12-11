@@ -14,8 +14,8 @@ const axios = require('axios')
       connection: {
         host: 'localhost',
         user: 'postgres',
-        password: 'King123@postgres',
-        database: 'chatgate'
+        password: 'postgres',
+        database: 'botpress'
       }
     })
 
@@ -24,7 +24,7 @@ const axios = require('axios')
         const result = await knex('hitl_sessions')
           .select('id')
           .where({ thread_id: threadId })
-          .first() // Use .first() to get a single result
+          .first() 
 
         return result ? result.id : null // Returns the id if found, otherwise null
       } catch (error) {
@@ -52,7 +52,7 @@ const axios = require('axios')
     // Use the session ID from the event object and specify 'pause' as the action
 
     const action = 'pause'
-    const url = /mod/hitl/sessions/${sessionId}/${action}
+    const url = `/mod/hitl/sessions/${sessionId}/${action}`
 
     console.log('your session id', sessionId)
     // Send a POST request to the pause endpoint
